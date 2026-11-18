@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>문제 풀이 · SNULT 스페인어</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="back" href="index.html">← 목차로</a>
+    <p class="eyebrow" id="eyebrow">SNULT</p>
+    <h1 id="title">—</h1>
+    <p class="sub" id="subtitle"></p>
+  </div>
+</header>
+
+<div class="bar">
+  <div class="wrap">
+    <div class="ttl" id="bartitle">—<small id="barsub"></small></div>
+    <div class="ctrl">
+      <label for="voice">음성</label>
+      <select id="voice"><option>불러오는 중…</option></select>
+    </div>
+    <div class="ctrl">
+      <label for="rate">속도</label>
+      <select id="rate">
+        <option value="0.75">0.75× 아주 느리게</option>
+        <option value="0.85">0.85× 느리게</option>
+        <option value="0.92" selected>0.92× 보통</option>
+        <option value="1">1.0× 원어민 속도</option>
+        <option value="1.1">1.1× 빠르게</option>
+      </select>
+    </div>
+    <button class="btn" id="toggleAll">스크립트 모두 보기</button>
+    <button class="btn" id="stopAll">■ 정지</button>
+  </div>
+</div>
+
+<main class="wrap">
+  <div class="warnvoice" id="warnvoice">
+    이 브라우저에서 스페인어 음성을 찾지 못했습니다. 음성 듣기를 쓰려면 <b>Chrome</b> 또는 <b>Edge</b>로 열거나,
+    컴퓨터 설정에서 스페인어(Español) 음성을 추가해 주세요. 문제 풀이와 채점은 그대로 사용할 수 있습니다.
+  </div>
+
+  <div class="instr" id="instr"></div>
+  <div class="progress"><i id="bar"></i></div>
+
+  <div id="list"></div>
+
+  <div class="result" id="result">
+    <div class="big" id="rscore">0<small>/0</small></div>
+    <p id="rmsg"></p>
+    <div class="acts">
+      <button class="btn" id="again">다시 풀기</button>
+      <button class="btn" id="wrongonly">틀린 문제만 다시</button>
+      <button class="btn" id="next">다음 Part →</button>
+      <a class="btn" href="index.html" style="display:inline-block">목차로</a>
+    </div>
+  </div>
+</main>
+
+<footer>SNULT 스페인어 시험대비 학습 사이트 · 다인에듀</footer>
+
+<script src="data/s1l.js"></script>
+<script src="data/s1r.js"></script>
+<script src="data/s2l.js"></script>
+<script src="data/s2r.js"></script>
+<script src="tts.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SNULT 스페인어 · 인터랙티브 시험대비 학습</title>
+<meta name="description" content="SNULT 스페인어 청해·독해 전 과정을 문제 풀이, 즉시 채점, 원어민 발음 듣기로 학습하는 인터랙티브 사이트">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <p class="eyebrow">Examen SNULT · Español</p>
+    <h1>SNULT 스페인어 인터랙티브 학습</h1>
+    <p class="sub">청해 100문항 · 독해 100문항 — 풀고, 바로 채점하고, 원어민 발음으로 듣습니다.</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="note">
+    <b>이렇게 공부하세요.</b> ① 청해는 먼저 <b>스크립트를 가린 채</b> 음성만 듣고 답을 고릅니다.
+    ② 답을 고르면 즉시 정답·해설·번역·어휘가 열립니다.
+    ③ Part를 끝내면 점수가 자동 저장되어 아래 버튼에 표시됩니다.
+  </div>
+
+  <div id="sets"></div>
+
+  <div class="card" style="margin-top:22px">
+    <h2>시험 구성</h2>
+    <p class="meta">SNULT 스페인어는 청해 50문항, 독해 50문항으로 이루어집니다.</p>
+    <div class="seclist">
+      <div class="secitem">
+        <h3><span class="badge">청해</span> Comprensión auditiva</h3>
+        <div style="font-size:13.5px;color:#4a4463">
+          Part I (1~15) 한 문장을 듣고 알맞은 응답 고르기 · Part II (16~30) 짧은 대화의 마지막 응답 고르기 ·
+          Part III (31~40) 긴 대화를 듣고 질문에 답하기 · Part IV (41~50) 글을 듣고 질문에 답하기
+        </div>
+      </div>
+      <div class="secitem">
+        <h3><span class="badge">독해</span> Comprensión lectora</h3>
+        <div style="font-size:13.5px;color:#4a4463">
+          Part I (1~10) 문법 빈칸·어법 오류 찾기 · Part II (11~20) 어휘 빈칸 ·
+          Part III (21~35) 글을 읽고 빈칸 채우기 · Part IV (36~50) 글을 읽고 질문에 답하기
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h2>학습 기록</h2>
+    <p class="meta">이 브라우저에 저장됩니다. 수업에서 공용 PC를 쓸 때는 끝나고 기록을 지워 주세요.</p>
+    <div id="overall" style="font-size:14px;margin-bottom:12px"></div>
+    <button class="btn" id="reset">학습 기록 모두 지우기</button>
+  </div>
+
+</main>
+
+<footer>
+  SNULT 스페인어 시험대비 수업용 학습 사이트 · 다인에듀(후안샘)<br>
+  모든 문항과 해설은 시험 유형에 맞추어 새로 집필한 자체 제작 자료입니다.
+</footer>
+
+<script src="data/s1l.js"></script>
+<script src="data/s1r.js"></script>
+<script src="data/s2l.js"></script>
+<script src="data/s2r.js"></script>
+<script>
+var BANK = { '1l': DATA_S1L, '1r': DATA_S1R, '2l': DATA_S2L, '2r': DATA_S2R };
+function key(s,k,p){ return 'snult:'+s+k+':p'+p; }
+function getScore(s,k,p){ try{ return JSON.parse(localStorage.getItem(key(s,k,p))||'null'); }catch(e){ return null; } }
+
+function partCount(d,p){ return d.items.filter(function(i){return i.part===p;}).length; }
+
+function render(){
+  var host = document.getElementById('sets'), html = '';
+  [1,2].forEach(function(s){
+    html += '<div class="card" style="margin-bottom:16px">';
+    html += '<h2>SET '+s+'</h2><p class="meta">청해 50문항 + 독해 50문항</p><div class="seclist">';
+    [['l','청해','Comprensión auditiva'],['r','독해','Comprensión lectora']].forEach(function(kk){
+      var d = BANK[s+kk[0]];
+      html += '<div class="secitem"><h3><span class="badge">'+kk[1]+'</span> '+kk[2]+'</h3><div class="partrow">';
+      d.parts.forEach(function(p){
+        var sc = getScore(s,kk[0],p.id), n = partCount(d,p.id);
+        var line = sc ? '<span class="score">'+sc.correct+'/'+sc.total+'점</span>' : '<span>'+n+'문항</span>';
+        html += '<a class="pbtn" href="practice.html?s='+s+'&k='+kk[0]+'&p='+p.id+'">'+
+                '<b>'+p.name+'</b><span>'+p.range+'번</span>'+line+'</a>';
+      });
+      html += '</div></div>';
+    });
+    html += '</div></div>';
+  });
+  host.innerHTML = html;
+
+  var done=0, tot=0, got=0, max=0;
+  [1,2].forEach(function(s){ ['l','r'].forEach(function(k){
+    BANK[s+k].parts.forEach(function(p){
+      tot++; var sc=getScore(s,k,p.id);
+      if(sc){ done++; got+=sc.correct; max+=sc.total; }
+    });
+  });});
+  document.getElementById('overall').innerHTML = done
+    ? '완료한 Part <b>'+done+'/'+tot+'</b> · 누적 정답 <b>'+got+'/'+max+'</b> ('+Math.round(got/max*100)+'%)'
+    : '아직 푼 Part가 없습니다. 위에서 시작해 보세요.';
+}
+document.getElementById('reset').onclick = function(){
+  if(!confirm('저장된 점수를 모두 지울까요?')) return;
+  Object.keys(localStorage).filter(function(k){return k.indexOf('snult:')===0;}).forEach(function(k){localStorage.removeItem(k);});
+  render();
+};
+render();
+</script>
+</body>
+</html>
